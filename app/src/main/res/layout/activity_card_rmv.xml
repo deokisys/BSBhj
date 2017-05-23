@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bussystemforblind.bsb.CardRmv"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="259dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="등록중인  카 드 번 호  /  유 효 년 월"
+        android:gravity="center"
+        android:layout_weight="0.6"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="259dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/text"
+        android:gravity="center"
+        android:layout_weight="0.6"/>
+
+    <Button
+        android:id="@+id/card_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="제거하기"
+        android:textColor="#ffff00"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:background="#333333"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_horizontal"
+        android:onClick="btnclick"
+        android:layout_weight="0.09"/>
+
+</LinearLayout>

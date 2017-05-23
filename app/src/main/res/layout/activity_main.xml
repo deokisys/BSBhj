@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bussystemforblind.bsb.MainActivity"
+    android:orientation="vertical">
+
+
+    <Button
+        android:id="@+id/BusRsv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="예 약 하 기"
+        android:textSize="45dp"
+        android:textStyle="bold"
+        android:background="#ffffff"
+        android:textColor="#333333"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/cardRgs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="카 드 등 록"
+        android:textSize="45dp"
+        android:textStyle="bold"
+        android:background="#333333"
+        android:textColor="#ffffff"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"/>
+</LinearLayout>
