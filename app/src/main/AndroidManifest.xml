@@ -12,19 +12,25 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Card" />
+        <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Card" />
-        <activity android:name=".DBHelper" />
         <activity android:name=".CardRgs" />
         <activity android:name=".CardShow" />
         <activity android:name=".CardRmv" />
-        <activity android:name=".stt_test"></activity>
+        <activity android:name=".stt_test" />
+        <activity android:name=".selectDestination" />
+        <activity android:name=".arriveBus" />
+        <activity android:name=".busStop" />
+        <activity android:name=".busStop2" />
+        <activity android:name=".CheckRsv" />
+        <activity android:name=".estTime" />
+        <activity android:name=".InputBusNumber" />
+
     </application>
 
 </manifest>

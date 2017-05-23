@@ -41,8 +41,8 @@ public class CardRmv extends AppCompatActivity implements OnInitListener{
                 }catch (SQLException e){
                 }
                 if(TextUtils.isEmpty(text.getText())){
-                    Toast.makeText(CardRmv.this, "등록되어 있는 카드가 없습니다.", Toast.LENGTH_SHORT).show();
-                    String text1 = "등록되어 있는 카드가 없습니다.";
+                    Toast.makeText(CardRmv.this, "제거할 카드가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    String text1 = "제거할 카드가 존재하지 않습니다.";
                     myTTS.speak(text1, TextToSpeech.QUEUE_ADD, null);
                 }else{
                     Toast.makeText(CardRmv.this, "카드가 제거되었습니다.", Toast.LENGTH_SHORT).show();

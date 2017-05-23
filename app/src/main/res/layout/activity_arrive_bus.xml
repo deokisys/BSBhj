@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".arriveBus"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:id="@+id/activity_arrive_bus">
+
+    <TextView
+        android:id="@+id/estTime"
+        android:fontFamily="monospace"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="버스가 곧 도착합니다.\n\n음성으로 버스위치를 \n안내합니다."
+        android:textAlignment="center"
+        android:gravity="center_vertical"
+        android:textSize="30dp"
+        android:textColor="#333333"/>
+
+</LinearLayout>

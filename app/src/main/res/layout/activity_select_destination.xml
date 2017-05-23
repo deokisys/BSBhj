@@ -19,6 +19,8 @@
         android:inputType="text"
         android:hint="정류장이름"/>
 
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".estTime"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:id="@+id/activity_est_time">
+
+    <TextView
+        android:id="@+id/estTime"
+        android:fontFamily="monospace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.9"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancelRsv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            android:textSize="40dp"
+            android:layout_marginRight="5dp"
+            android:background="#333333"
+            android:textColor="#fbe600"
+            android:text="예약취소"/>
+
+        <Button
+            android:id="@+id/reBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            android:textSize="40dp"
+            android:layout_marginLeft="5dp"
+            android:background="#333333"
+            android:textColor="#fbe600"
+            android:text="새로고침"/>
+    </LinearLayout>
+</LinearLayout>
