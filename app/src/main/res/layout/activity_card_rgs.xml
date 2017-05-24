@@ -14,7 +14,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="카드번호"
+        android:text="  카드번호"
         android:textSize="20dp"
         android:textStyle="bold" />
 
@@ -28,7 +28,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="유효년월"
+        android:text="  유효년월"
         android:textSize="20dp"
         android:textStyle="bold"/>
 
@@ -42,7 +42,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CVC"
+        android:text="  CVC"
         android:textSize="20dp"
         android:textStyle="bold"/>
 
@@ -56,7 +56,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="비밀번호"
+        android:text="  비밀번호"
         android:textSize="20dp"
         android:textStyle="bold"/>
 
@@ -70,7 +70,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="이름"
+        android:text="  이름"
         android:textSize="20dp"
         android:textStyle="bold"/>
 
@@ -84,7 +84,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="주민등록번호"
+        android:text="  주민등록번호"
         android:textSize="20dp"
         android:textStyle="bold"/>
 

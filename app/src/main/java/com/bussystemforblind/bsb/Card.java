@@ -1,6 +1,7 @@
 package com.bussystemforblind.bsb;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,14 @@ public class Card extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
+
+        /*상단바 디자인*/
+        try {
+            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            getSupportActionBar().setCustomView(R.layout.custom_bar);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
         cardShow = (Button)findViewById(R.id.cardShow);
         cardRgs2 = (Button)findViewById(R.id.cardRgs2);

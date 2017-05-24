@@ -3,6 +3,7 @@ package com.bussystemforblind.bsb;
 import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -29,6 +30,13 @@ public class CardRgs extends AppCompatActivity implements OnInitListener {
         setContentView(R.layout.activity_card_rgs);
         myTTS = new TextToSpeech(this,this);
 
+        /*상단바 디자인*/
+        try {
+            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            getSupportActionBar().setCustomView(R.layout.custom_bar);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
         cardnum = (EditText)findViewById(R.id.cardnum_input);
         effdate = (EditText)findViewById(R.id.effdate_input);

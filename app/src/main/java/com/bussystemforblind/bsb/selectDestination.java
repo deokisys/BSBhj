@@ -193,20 +193,41 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
             stopname_input.setText("" + rs[0]);
             mRecognizer.startListening(i);
             String stt = stopname_input.getText().toString();
-            if(busStopList.contains(stt)){
+
+            String stt_f = stt;
+            String stt_t = "뷁";
+            if (stt.contains(" ")) {
+                String split[] = stt.split(" ");
+                stt_f = split[0];
+                stt_t = split[1];
+            }
+
+            //Toast.makeText(selectDestination.this, stt+","+stt_f+","+stt_t+"//"+busStopList.matches(".*"+stt_f+".*")+"//"+busStopList.matches(".*"+stt_t+".*"), Toast.LENGTH_SHORT).show();
+            if(busStopList.matches(".*"+stt_f+".*") || busStopList.matches(".*"+stt_t+".*")){
                 Toast.makeText(selectDestination.this, "정류장이 존재합니다.", Toast.LENGTH_SHORT).show();
                 String text = "정류장이 존재합니다.";
-                myTTS.speak(text, TextToSpeech.QUEUE_ADD, null);
-                int index = busStopList.indexOf(stt);
+                //myTTS.speak(text, TextToSpeech.QUEUE_ADD, null);
+
+                int index_stt_f = busStopList.indexOf(stt_f);
+                int index_stt_t = busStopList.indexOf(stt_t);
+
                 String tmp = "";
-                tmp = busStopList.substring(index);
-                for(int i=0; i<tmp.length(); i++){
-                    if(tmp.substring(i,i+1).equals(",")){
-                        int index2 = tmp.indexOf(",");
-                        tmp = tmp.substring(index-1, index2);
+
+                if(busStopList.contains(stt_f)) {
+                    tmp = busStopList.substring(index_stt_f);
+                    for(int k=0; k<tmp.length(); k++){
+                        if(tmp.substring(k, k+1).equals(",")){
+                            tmp = tmp.substring(0,k);
+                        }
+                    }
+                }else{
+                    tmp = busStopList.substring(index_stt_t);
+                    for(int l=0; l<tmp.length(); l++){
+                        if(tmp.substring(l, l+1).equals(",")){
+                            tmp = tmp.substring(0,l);
+                        }
                     }
                 }
-
                 topTV1 = new TextView(selectDestination.this);
                 topTV1.setText(tmp);
 
