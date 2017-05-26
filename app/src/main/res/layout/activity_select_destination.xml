@@ -8,8 +8,6 @@
     tools:context="com.bussystemforblind.bsb.stt_test"
     android:orientation="vertical">
 
-
-
     <EditText
         android:id="@+id/stopname_input"
         android:layout_width="fill_parent"
@@ -17,6 +15,7 @@
         android:padding="5dp"
         android:background="@drawable/rounded_edittext"
         android:inputType="text"
+        android:fontFamily="monospace"
         android:hint="정류장이름"/>
 
 

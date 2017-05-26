@@ -1,18 +1,14 @@
 package com.bussystemforblind.bsb;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.widget.EditText;
-import android.widget.Toast;
-
 
 import java.util.ArrayList;
 

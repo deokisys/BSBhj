@@ -2,10 +2,10 @@ package com.bussystemforblind.bsb;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -19,7 +19,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class estTime extends AppCompatActivity {
-
     TextView estTv;
     Button cancleBtn, reBtn;
     LinearLayout linearLayout;
@@ -34,6 +33,7 @@ public class estTime extends AppCompatActivity {
     String busArrival;
     String dtnStation;
     String busId;
+    String dtnNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,28 +55,19 @@ public class estTime extends AppCompatActivity {
         stationId = intent.getStringExtra("stationId");
         routeId = intent.getStringExtra("routeId");
         dtnStation = intent.getStringExtra("Destination");
+        dtnNumber = intent.getStringExtra("dtnNumber");
+
+        Log.d("routeId", routeId);
+        Log.d("dtnStation", dtnStation);
+        Log.d("dtnNumber", dtnNumber);
 
         try {
             staOrder=api.getStaOrder(routeId,busNumber);
             busArrival=api.getBusArrival(stationId,routeId,staOrder);
-            //busId=api.getBusId(stationId,routeId,staOrder);
+            busId=api.getBusId(stationId,routeId,staOrder);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        /*도착예정버스의 교유번호, 정류장ID 서버에 전송*/
-        /*
-        SocketManager manager = SocketManager.getManager();
-        manager.sendMsg("99");
-        String msg = manager.getMsg();
-        Log.d("MSG",msg);
-        Log.d("MainActivity", "완료");
-
-        Toast toast = Toast.makeText(getApplicationContext(), "소켓통신 "+msg, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER,0,0);
-        toast.show();
-        */
-        /*******/
 
         estTv = (TextView)findViewById(R.id.estTime);
         estTv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -84,6 +75,17 @@ public class estTime extends AppCompatActivity {
         estTv.setTextSize(35);
         estTv.setTextColor(Color.parseColor("#333333"));
         estTv.setText(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장\n\n" + "위치해 있습니다.");
+
+
+        /*도착예정버스의 교유번호, 정류장ID 서버에 전송*/
+        //SocketManager manager = SocketManager.getManager();
+        //manager.sendMsg("2-"+busId+"-"+stationId);
+        //manager.sendMsg("2-0-"+stationId);
+        //String msg = manager.getMsg();
+        //Log.d("MSG",msg);
+
+        /*비콘 정보 받기*/
+
 
         cancleBtn = (Button)findViewById(R.id.cancelRsv);
         cancleBtn.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +121,6 @@ public class estTime extends AppCompatActivity {
                 try {
                     staOrder=api.getStaOrder(routeId,busNumber);
                     busArrival=api.getBusArrival(stationId,routeId,staOrder);
-                    //busId=api.getBusId(stationId,routeId,staOrder);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -148,11 +149,23 @@ public class estTime extends AppCompatActivity {
                 /*버스가 전정류장에 도착시*/
                 if(busArrival.equals("1")){
                     mTimer.cancel();
+
+
+                    /*도착예정버스의 교유번호, 정류장ID 서버에 전송*/
+                    //SocketManager manager = SocketManager.getManager();
+                    //manager.sendMsg("2-"+busId+"-"+stationId);
+                    //manager.sendMsg("2-0-"+stationId);
+                    //String msg = manager.getMsg();
+                    //Log.d("MSG",msg);
+                    /*비콘 정보 받기*/
+
                     Intent intent1 = new Intent(getApplicationContext(), arriveBus.class);
                     intent1.putExtra("busNumber", busNumber);
                     intent1.putExtra("Destination", dtnStation);
                     intent1.putExtra("stationId", stationId);
                     intent1.putExtra("routeId",routeId);
+                    intent1.putExtra("busId", busId);
+                    intent1.putExtra("dtnNumber", dtnNumber);
                     startActivity(intent1);
                 }
             }

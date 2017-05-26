@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 /**
  * Created by HyeonJu on 2017-05-10.
  */

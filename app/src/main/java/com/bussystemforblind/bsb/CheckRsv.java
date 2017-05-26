@@ -2,9 +2,9 @@ package com.bussystemforblind.bsb;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +34,7 @@ public class CheckRsv extends AppCompatActivity {
         final String dtnStation = intent.getStringExtra("Destination");
         final String stationId = intent.getStringExtra("stationId");
         final String routeId = intent.getStringExtra("routeId");
+        final String dtnNumber = intent.getStringExtra("dtnNumber");
 
         checkTv = (TextView)findViewById(R.id.checkRsv);
         checkTv.setText(busNumber+" 번 버스\n\n"+dtnStation+"\n정류장\n\n" + "예약 하시겠습니까?");
@@ -51,6 +52,7 @@ public class CheckRsv extends AppCompatActivity {
                 intent1.putExtra("Destination", dtnStation);
                 intent1.putExtra("stationId", stationId);
                 intent1.putExtra("routeId",routeId);
+                intent1.putExtra("dtnNumber", dtnNumber);
                 startActivity(intent1);
             }
         });

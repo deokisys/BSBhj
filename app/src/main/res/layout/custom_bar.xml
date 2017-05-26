@@ -12,6 +12,7 @@
         android:textColor="#333333"
         android:id="@+id/mytext"
         android:textStyle="bold"
+        android:fontFamily="monospace"
         android:textSize="20dp" />
 
 </LinearLayout>

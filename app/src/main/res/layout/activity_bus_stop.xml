@@ -9,7 +9,7 @@
     android:id="@+id/activity_bus_stop">
 
     <TextView
-        android:id="@+id/estTime"
+        android:id="@+id/dtnTv"
         android:fontFamily="monospace"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

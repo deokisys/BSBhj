@@ -1,10 +1,10 @@
 package com.bussystemforblind.bsb;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +14,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     Button busRsv;
-    Button cardRgs, BusRsv;
+    Button cardRgs;
     BusAPI api = new BusAPI();
     String stationId="";
 

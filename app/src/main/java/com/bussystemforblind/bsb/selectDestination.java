@@ -4,15 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.os.StrictMode;
-import android.speech.RecognizerIntent;
 import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -39,7 +40,9 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
     private TextToSpeech myTTS;
     String busStopList = "";
     Context context = this;
-
+    String busNumber;
+    String stationId;
+    String DtnStaionNum="";
 
 
     @Override
@@ -71,8 +74,8 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
 
         /*이전 페이지에서 넘어온 데이터*/
         Intent intent = getIntent();
-        final String busNumber = intent.getStringExtra("busNumber");
-        final String stationId = intent.getStringExtra("stationId");
+        busNumber = intent.getStringExtra("busNumber");
+        stationId = intent.getStringExtra("stationId");
 
         /*목적지 정류장 List 가져오기*/
         //String busStopList = "";
@@ -87,63 +90,10 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
         /*List가 비었을 때*/
         if(busStopList.equals("")){
             busStopList = "";
-            Toast toast = Toast.makeText(getApplicationContext(), "정류장이 존재하지 않습니다.", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), "운행중인 버스가 없습니다.", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER,0,0);
             toast.show();
         }
-
-        /*정류장 List 나열, 클릭시 예약 페이지로 이동
-            topLL = (LinearLayout)findViewById(R.id.dynamicArea);
-
-            tmp = "";
-            int black = 0;
-            int id=0;
-            for(int i=0; i<busStopList.length(); i++){
-                if(busStopList.substring(i,i+1).equals(",")==false){
-                    tmp = tmp+busStopList.substring(i,i+1);
-                }
-                else if(busStopList.substring(i,i+1).equals(",")){
-                    if(tmp.equals("")==false){
-                        topTV1 = new TextView(selectDestination.this);
-
-                        Context context = this;
-                        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, context.getResources().getDisplayMetrics());
-
-                        topTV1.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) px));
-                        topTV1.setTextSize(30);
-                        topTV1.setText(tmp);
-                        topTV1.setTypeface(Typeface.MONOSPACE);
-                        topTV1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        topTV1.setGravity(Gravity.CENTER_VERTICAL);
-                        topTV1.setId(id);
-                        stationList.add(tmp);
-                        id++;
-                        if(black==0){
-                            topTV1.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                            topTV1.setTextColor(Color.parseColor("#333333"));
-                            black=1;
-                        }
-                        else if(black==1){
-                            topTV1.setBackgroundColor(Color.parseColor("#333333"));
-                            topTV1.setTextColor(Color.parseColor("#ffffff"));
-                            black=0;
-                        }
-                        topTV1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getApplicationContext(), CheckRsv.class);
-                                intent.putExtra("busNumber", busNumber);
-                                intent.putExtra("Destination", stationList.get(v.getId()));
-                                intent.putExtra("stationId", stationId);
-                                intent.putExtra("routeId",routeId);
-                                startActivity(intent);
-                            }
-                        });
-                        topLL.addView(topTV1);
-                        tmp="";
-                    }
-                }
-        }*/
     }
     public void onClick(View v) {
         v.setBackgroundColor(Color.parseColor("#fbe600"));
@@ -152,34 +102,22 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
     private RecognitionListener listener = new RecognitionListener() {
         @Override
         public void onReadyForSpeech(Bundle params) {
-
         }
-
         @Override
         public void onBeginningOfSpeech() {
-
         }
-
         @Override
         public void onRmsChanged(float rmsdB) {
-
         }
-
         @Override
         public void onBufferReceived(byte[] buffer) {
-
         }
-
         @Override
         public void onEndOfSpeech() {
-
         }
-
         @Override
         public void onError(int error) {
-
         }
-
         @Override
         public void onResults(Bundle results) {
             int id = 0;
@@ -252,10 +190,19 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
                 stationList.add(tmp);
                 id++;
 
-                 /*이전 페이지에서 넘어온 데이터*/
-                Intent intent = getIntent();
-                final String busNumber = intent.getStringExtra("busNumber");
-                final String stationId = intent.getStringExtra("stationId");
+                /*목적지까지 몇정류장인지 계산*/
+                LinkedList<String> list = new LinkedList<String>();
+                try {
+                    list=busAPI.busStopList(routeId, stationId);// ㅣist : 목적지 정류장들 List
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                for(int i=0; i<list.size(); i++){
+                    if(list.get(i).matches(tmp)){
+                        DtnStaionNum = list.get(i).substring(0,1);
+                        Log.d("DtnStaionNum", DtnStaionNum);
+                    }
+                }
 
                 topTV1.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -265,6 +212,7 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
                         intent.putExtra("Destination", stationList.get(v.getId()));
                         intent.putExtra("stationId", stationId);
                         intent.putExtra("routeId",routeId);
+                        intent.putExtra("dtnNumber", DtnStaionNum);
                         startActivity(intent);
                     }
                 });

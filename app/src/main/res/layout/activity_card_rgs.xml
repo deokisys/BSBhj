@@ -8,57 +8,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.bussystemforblind.bsb.CardRgs"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="  카드번호"
+        android:text="카드번호"
         android:textSize="20dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="monospace" />
 
     <EditText
         android:id="@+id/cardnum_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
-        android:hint="cardnum"/>
+        android:hint="cardnum"
+        android:fontFamily="monospace"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="  유효년월"
+        android:text="유효년월"
         android:textSize="20dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:fontFamily="monospace"/>
 
     <EditText
         android:id="@+id/effdate_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="date"
-        android:hint="date"/>
+        android:hint="date"
+        android:fontFamily="monospace"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="  CVC"
+        android:text="CVC"
         android:textSize="20dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:fontFamily="monospace"/>
 
     <EditText
         android:id="@+id/cvc_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="numberPassword"
-        android:hint="cvc"/>
+        android:hint="cvc"
+        android:fontFamily="monospace"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="  비밀번호"
+        android:text="비밀번호"
         android:textSize="20dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:fontFamily="monospace"/>
 
     <EditText
         android:id="@+id/password_input"
@@ -70,37 +78,42 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="  이름"
+        android:text="이름"
         android:textSize="20dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:fontFamily="monospace"/>
 
     <EditText
         android:id="@+id/uname_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:hint="uname"/>
+        android:hint="uname"
+        android:fontFamily="monospace"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="  주민등록번호"
+        android:text="주민등록번호"
         android:textSize="20dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:fontFamily="monospace"/>
 
     <EditText
         android:id="@+id/regnum_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="numberPassword"
-        android:hint="regnum"/>
+        android:hint="regnum"
+        android:fontFamily="monospace"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="등록중인 카드 : "
-        android:gravity="center"/>
+        android:gravity="center"
+        android:fontFamily="monospace"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -108,7 +121,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/textView2"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:fontFamily="monospace"/>
 
     <Button
         android:id="@+id/card_save"
@@ -122,6 +136,7 @@
         android:gravity="center_vertical"
         android:layout_gravity="center_horizontal"
         android:textAlignment="center"
-        android:onClick="btn_click"/>
+        android:onClick="btn_click"
+        android:fontFamily="monospace"/>
 </LinearLayout>
 </ScrollView>

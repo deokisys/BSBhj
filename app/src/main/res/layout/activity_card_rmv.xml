@@ -12,6 +12,7 @@
         android:layout_height="259dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="등록중인  카 드 번 호  /  유 효 년 월"
+        android:fontFamily="monospace"
         android:gravity="center"
         android:layout_weight="0.6"/>
 
@@ -20,6 +21,7 @@
         android:layout_height="259dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
+        android:fontFamily="monospace"
         android:id="@+id/text"
         android:gravity="center"
         android:layout_weight="0.6"/>
@@ -29,6 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="제거하기"
+        android:fontFamily="monospace"
         android:textColor="#ffff00"
         android:textSize="30dp"
         android:textStyle="bold"
