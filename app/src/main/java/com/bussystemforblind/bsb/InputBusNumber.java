@@ -2,6 +2,7 @@ package com.bussystemforblind.bsb;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,17 +15,21 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class InputBusNumber extends AppCompatActivity implements View.OnClickListener{
+public class InputBusNumber extends AppCompatActivity implements View.OnClickListener, TextToSpeech.OnInitListener{
 
     BusAPI api = new BusAPI();
     Button btn_1,btn_2,btn_3,btn_4,btn_5,btn_6,btn_7,btn_8,btn_9,btn_0,btn_reset,btn_ok,btn_hypen;
     TextView busNumber;
     String stationId="";
 
+    private TextToSpeech myTTS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_bus_number);
+
+        myTTS = new TextToSpeech(this, this);
 
         Intent intent = getIntent();
         stationId = intent.getStringExtra("stationId");
@@ -134,5 +139,10 @@ public class InputBusNumber extends AppCompatActivity implements View.OnClickLis
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onInit(int status) {
+        myTTS.speak("탑승하고자 하는 버스의 번호를 입력해주세요.", TextToSpeech.QUEUE_ADD, null);
     }
 }

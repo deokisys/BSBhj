@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="259dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="등록중인  카 드 번 호  /  유 효 년 월"
+        android:text="등록중인 카드번호 / 유효년월"
         android:fontFamily="monospace"
         android:gravity="center"
         android:layout_weight="0.6"/>

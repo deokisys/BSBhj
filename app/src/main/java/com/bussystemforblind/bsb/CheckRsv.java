@@ -10,16 +10,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
 
-public class CheckRsv extends AppCompatActivity {
+public class CheckRsv extends AppCompatActivity implements OnInitListener {
 
     TextView checkTv;
     Button yes,no;
+    private TextToSpeech myTTS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_rsv);
+
+        myTTS = new TextToSpeech(this, this);
 
         /*상단바 디자인*/
         try {
@@ -61,6 +66,7 @@ public class CheckRsv extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast toast = Toast.makeText(getApplicationContext(), "처음화면으로 돌아갑니다.", Toast.LENGTH_LONG);
+                myTTS.speak("처음화면으로 돌아갑니다.", TextToSpeech.QUEUE_ADD, null);
                 toast.setGravity(Gravity.CENTER,0,0);
                 toast.show();
                 Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
@@ -68,5 +74,9 @@ public class CheckRsv extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onInit(int status) {
     }
 }

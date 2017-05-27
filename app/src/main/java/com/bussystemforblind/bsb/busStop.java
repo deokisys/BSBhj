@@ -3,6 +3,7 @@ package com.bussystemforblind.bsb;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,7 +16,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class busStop extends AppCompatActivity {
+public class busStop extends AppCompatActivity implements TextToSpeech.OnInitListener{
     LinearLayout linearLayout;
     String busNumber, stationId, routeId, dtnStation, busId, dtnNumber;
     BusAPI api = new BusAPI();
@@ -25,10 +26,14 @@ public class busStop extends AppCompatActivity {
     private TimerTask mTask;
     private Timer mTimer;
 
+    private TextToSpeech myTTS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_stop);
+
+        myTTS = new TextToSpeech(this, this);
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
 
@@ -122,5 +127,10 @@ public class busStop extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
+    }
+
+    @Override
+    public void onInit(int status) {
+
     }
 }
