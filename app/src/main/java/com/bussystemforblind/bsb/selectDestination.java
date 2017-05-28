@@ -155,7 +155,7 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
             if (!stt_t.equals("뷁")) {
                 myTTS.speak(stt_t, TextToSpeech.QUEUE_ADD, null);
             }
-            myTTS.speak("를 입력하셨습니다. 맞으시면 화면을 길게 터치해주시고, 다시입력하시고 싶으시면 화면을 더블터치해주세요.", TextToSpeech.QUEUE_ADD, null);
+            myTTS.speak("를 입력하셨습니다. 맞으시면 화면을 길게 터치해주시고, 다시입력하시고 싶으시면 화면을 두번터치해주세요.", TextToSpeech.QUEUE_ADD, null);
 
         }
 
@@ -323,7 +323,7 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
     }
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        Toast.makeText(this, "더블터치됨", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "두번터치됨", Toast.LENGTH_SHORT).show();
         myTTS.speak("다시 말씀해주세요.", TextToSpeech.QUEUE_ADD, null);
         restart();
         return false;

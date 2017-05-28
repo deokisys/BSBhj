@@ -18,6 +18,7 @@ public class CheckRsv extends AppCompatActivity implements OnInitListener {
     TextView checkTv;
     Button yes,no;
     private TextToSpeech myTTS;
+    String speak = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +43,19 @@ public class CheckRsv extends AppCompatActivity implements OnInitListener {
         final String dtnNumber = intent.getStringExtra("dtnNumber");
 
         checkTv = (TextView)findViewById(R.id.checkRsv);
-        checkTv.setText(busNumber+" 번 버스\n\n"+dtnStation+"\n정류장\n\n" + "예약 하시겠습니까?");
+        checkTv.setText(busNumber+" 번 버스\n\n"+dtnStation+"\n정류장을\n\n" + "예약하시겠습니까?");
         checkTv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         checkTv.setGravity(Gravity.CENTER_VERTICAL);
         checkTv.setTextSize(35);
         checkTv.setTextColor(Color.parseColor("#333333"));
+        speak = checkTv.getText().toString();
 
         yes = (Button)findViewById(R.id.YES);
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                myTTS.speak("예약되었습니다.", TextToSpeech.QUEUE_ADD, null);
+
                 Intent intent1 = new Intent(getApplicationContext(), estTime.class);
                 intent1.putExtra("busNumber", busNumber);
                 intent1.putExtra("Destination", dtnStation);
@@ -78,5 +82,6 @@ public class CheckRsv extends AppCompatActivity implements OnInitListener {
 
     @Override
     public void onInit(int status) {
+        myTTS.speak(speak, TextToSpeech.QUEUE_ADD, null);
     }
 }

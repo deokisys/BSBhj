@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,7 +19,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class estTime extends AppCompatActivity {
+public class estTime extends AppCompatActivity implements TextToSpeech.OnInitListener{
     TextView estTv;
     Button cancleBtn, reBtn;
     LinearLayout linearLayout;
@@ -35,10 +36,15 @@ public class estTime extends AppCompatActivity {
     String busId;
     String dtnNumber;
 
+    private TextToSpeech myTTS;
+    String speak = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_est_time);
+
+        myTTS = new TextToSpeech(this, this);
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
 
@@ -74,8 +80,8 @@ public class estTime extends AppCompatActivity {
         estTv.setGravity(Gravity.CENTER_VERTICAL);
         estTv.setTextSize(35);
         estTv.setTextColor(Color.parseColor("#333333"));
-        estTv.setText(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장\n\n" + "위치해 있습니다.");
-
+        estTv.setText(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장에\n\n" + "위치해 있습니다.");
+        speak = estTv.getText().toString();
 
         /*도착예정버스의 교유번호, 정류장ID 서버에 전송*/
         //SocketManager manager = SocketManager.getManager();
@@ -93,6 +99,7 @@ public class estTime extends AppCompatActivity {
             public void onClick(View v) {
                 mTimer.cancel();
                 Toast toast = Toast.makeText(getApplicationContext(), "예약이 취소되었습니다.", Toast.LENGTH_LONG);
+                myTTS.speak("예약이 취소되었습니다. 처음화면으로 돌아갑니다.", TextToSpeech.QUEUE_ADD, null);
                 toast.setGravity(Gravity.CENTER,0,0);
                 toast.show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -110,7 +117,8 @@ public class estTime extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                estTv.setText(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장\n\n" + "위치해 있습니다.");
+                estTv.setText(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장에\n\n" + "위치해 있습니다.");
+                myTTS.speak(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장에\n\n" + "위치해 있습니다.", TextToSpeech.QUEUE_ADD, null);
             }
         });
 
@@ -124,7 +132,7 @@ public class estTime extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                estTv.setText(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장\n\n" + "위치해 있습니다.");
+                estTv.setText(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장에\n\n" + "위치해 있습니다.");
             }
         });
 
@@ -140,7 +148,7 @@ public class estTime extends AppCompatActivity {
                 runOnUiThread(new Runnable(){
                     @Override
                     public void run() {
-                        estTv.setText(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장\n\n" + "위치해 있습니다.");
+                        estTv.setText(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장에\n\n" + "위치해 있습니다.");
                     }
                 });
 
@@ -179,5 +187,10 @@ public class estTime extends AppCompatActivity {
         Log.i("test", "onDstory()");
         mTimer.cancel();
         super.onDestroy();
+    }
+
+    @Override
+    public void onInit(int status) {
+        myTTS.speak(speak,TextToSpeech.QUEUE_ADD,null);
     }
 }
