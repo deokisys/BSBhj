@@ -73,12 +73,6 @@ public class estTime extends AppCompatActivity implements TextToSpeech.OnInitLis
         stationId = intent.getStringExtra("stationId"); // 정류장 ID
         routeId = intent.getStringExtra("routeId"); // 버스 전체노선 ID
         dtnStation = intent.getStringExtra("Destination"); // 목적 정류장 이름
-        dtnNumber = intent.getStringExtra("dtnNumber");
-
-        Log.d("routeId", routeId);
-        Log.d("dtnStation", dtnStation);
-        Log.d("dtnNumber", dtnNumber);
-
 
         try {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
@@ -173,8 +167,6 @@ public class estTime extends AppCompatActivity implements TextToSpeech.OnInitLis
                     }
                 });
 
-                Log.d("5초마다", "ㅋㅋ");
-
                 /*버스가 전정류장에 도착시*/
                 if(busArrival.equals("1")){
                     mTimer.cancel();
@@ -201,8 +193,10 @@ public class estTime extends AppCompatActivity implements TextToSpeech.OnInitLis
         mTimer = new Timer();
         if(Integer.parseInt(busArrival)>3){
             mTimer.schedule(mTask, 10000, 10000); // 10초
+            Log.d("10초마다", "반복");
         }else if(Integer.parseInt(busArrival)<=3){
             mTimer.schedule(mTask, 5000, 5000); // 5초
+            Log.d("5초마다", "반복");
         }
 
     }

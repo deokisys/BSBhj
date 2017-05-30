@@ -484,6 +484,7 @@ public class BusAPI {
                 }
                 rd.close();
                 conn.disconnect();
+                Log.d("여기까지는 왔다",sb.toString());
             }while(sb.indexOf("NORMAL SERVICE.")==-1);
 
             startIndex = sb.indexOf("<plateNo>",startIndex)+9;

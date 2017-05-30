@@ -56,14 +56,11 @@ public class busStop extends AppCompatActivity implements TextToSpeech.OnInitLis
         dtnStation = intent.getStringExtra("dtnStation"); // 목적 정류장 이름
         busId = intent.getStringExtra("busId"); // 탑승중인 버스의 번호판 ex)"12가1234"
 
-        /*해당 버스의 노선에서 목적정류장의 순번 - 현재 버스가 위치한 정류장의 순번 = 도착 정류장까지 남은 정류장 수
-        목적정류장의 순번은 어디서 구할 것인가... 어떻게 구할 것인가?
-        어떻게? -> 해당 정류장에서 갈 수 있는 목적지를 뽑아오는 메소드를 이용하여 목적 정류장의 순번을 구하자
-        어디서? 이 클래스에서!*/
-
         /*해당버스에 대하여 목적 정류장의 순번을 알아냄*/
         String dtnStationNum = null;
         LinkedList<String> list = new LinkedList<String>();
+
+        Log.d("BusStop 클래스", "목적 정류장 순번을 알아냄");
         try {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
             list=busAPI.busStopList(routeId, stationId);// ㅣist : 목적지 정류장들 List ex) "정류장 이름 + 정류장 순번"
@@ -73,10 +70,13 @@ public class busStop extends AppCompatActivity implements TextToSpeech.OnInitLis
         for(int i=0; i<list.size(); i++){
             if(list.get(i).indexOf(dtnStation)>0){
                 dtnStationNum = list.get(i).substring(list.get(i).indexOf(dtnStation)+10); // 목적 정류장 순번만 잘라냄
-                Log.d("dtnStationNum", dtnStationNum);
+                Log.d("목적 정류장 이름,순번", list.get(i).toString());
+                Log.d("목적 정류장 순번", dtnStationNum);
+                break;
             }
         }
 
+        Log.d("BusStop 클래스", "현재 탑승중인 버스가 위치한 정류장 순번을 알아냄");
         try {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
             /*탑승중인 버스가 위치한 정류장의 순번*/

@@ -62,8 +62,6 @@ public class arriveBus extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_arrive_bus);
 
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
-
         try {
             getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             getSupportActionBar().setCustomView(R.layout.custom_bar);
