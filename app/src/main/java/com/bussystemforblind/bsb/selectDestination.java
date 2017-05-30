@@ -44,11 +44,9 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
     Context context = this;
     String busNumber;
     String stationId;
-    String DtnStaionNum = "";
     private GestureDetector detector;
     String stt_f = "";
     String stt_t = "";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +67,6 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
 
         stopname_input = (EditText) findViewById(R.id.stopname_input);
 
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
-
         /*상단바 디자인*/
         try {
             getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -87,8 +83,8 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
         /*목적지 정류장 List 가져오기*/
         //String busStopList = "";
         try {
-            routeId = busAPI.getRouteId(busNumber);
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
+            routeId = busAPI.getRouteId(busNumber);
             busStopList = busAPI.busStop(routeId, stationId);// busStopList : 목적지 정류장들 List(","로 구분되어있는 String 문자열)
         } catch (IOException e) {
             e.printStackTrace();
@@ -224,7 +220,6 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
             String tmp = "";
             String tmp2 = "";
 
-
             if (busStopList.contains(stt_f)) {
                 tmp2 = busStopList.substring(0, index_stt_f);
                 for (int m = 0; m < tmp2.length(); m++) {
@@ -276,29 +271,14 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
             stationList.add(tmp);
             id++;
 
-            /*목적지까지 몇정류장인지 계산*/
-            LinkedList<String> list = new LinkedList<String>();
-            try {
-                list = busAPI.busStopList(routeId, stationId);// ㅣist : 목적지 정류장들 List
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).matches(tmp)) {
-                    DtnStaionNum = list.get(i).substring(0, 1);
-                    Log.d("DtnStaionNum", DtnStaionNum);
-                }
-            }
-
             topTV1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getApplicationContext(), CheckRsv.class);
-                    intent.putExtra("busNumber", busNumber);
-                    intent.putExtra("Destination", stationList.get(v.getId()));
-                    intent.putExtra("stationId", stationId);
-                    intent.putExtra("routeId", routeId);
-                    intent.putExtra("dtnNumber", DtnStaionNum);
+                    intent.putExtra("busNumber", busNumber); //버스 번호
+                    intent.putExtra("stationId", stationId); // 정류장ID
+                    intent.putExtra("Destination", stationList.get(v.getId())); // 목적 정류장 이름
+                    intent.putExtra("routeId",routeId); // 버스의 전체 노선ID
                     startActivity(intent);
                 }
             });

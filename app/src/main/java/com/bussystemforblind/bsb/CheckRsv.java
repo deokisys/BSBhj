@@ -13,12 +13,16 @@ import android.widget.Toast;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 
+import java.io.IOException;
+import java.util.LinkedList;
+
 public class CheckRsv extends AppCompatActivity implements OnInitListener {
 
     TextView checkTv;
     Button yes,no;
     private TextToSpeech myTTS;
     String speak = "";
+    BusAPI busAPI = new BusAPI();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +40,11 @@ public class CheckRsv extends AppCompatActivity implements OnInitListener {
         }
 
         Intent intent = getIntent();
-        final String busNumber = intent.getStringExtra("busNumber");
-        final String dtnStation = intent.getStringExtra("Destination");
-        final String stationId = intent.getStringExtra("stationId");
-        final String routeId = intent.getStringExtra("routeId");
-        final String dtnNumber = intent.getStringExtra("dtnNumber");
+        final String busNumber = intent.getStringExtra("busNumber"); // 버스번호
+        final String dtnStation = intent.getStringExtra("Destination"); // 목적 정류장 이름
+        final String stationId = intent.getStringExtra("stationId"); // 정류장 ID
+        final String routeId = intent.getStringExtra("routeId"); // 버스 전체 노선 ID
+
 
         checkTv = (TextView)findViewById(R.id.checkRsv);
         checkTv.setText(busNumber+" 번 버스\n\n"+dtnStation+"\n정류장을\n\n" + "예약하시겠습니까?");
@@ -61,7 +65,6 @@ public class CheckRsv extends AppCompatActivity implements OnInitListener {
                 intent1.putExtra("Destination", dtnStation);
                 intent1.putExtra("stationId", stationId);
                 intent1.putExtra("routeId",routeId);
-                intent1.putExtra("dtnNumber", dtnNumber);
                 startActivity(intent1);
             }
         });
