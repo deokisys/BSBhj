@@ -46,6 +46,7 @@ public class busStop extends AppCompatActivity implements TextToSpeech.OnInitLis
 
         Toast toast2 = Toast.makeText(getApplicationContext(), "버스요금 결제가 완료되었습니다.", Toast.LENGTH_LONG);
         toast2.show();
+        myTTS.speak("버스요금결제가 완료되었습니다.", TextToSpeech.QUEUE_ADD, null);
 
         Intent intent = getIntent();
         busNumber = intent.getStringExtra("busNumber");
@@ -64,7 +65,8 @@ public class busStop extends AppCompatActivity implements TextToSpeech.OnInitLis
         Log.d("locationNumebr", "locationNumebr"+location);
 
         Tv.setText("목적지까지 "+(Integer.parseInt(dtnNumber)-Integer.parseInt(location))+" 정류장 \\n남았습니다.\\n\\n새로고침 하시려면\\n화면을 터치하세요.");
-
+        String speak = Tv.getText().toString();
+        myTTS.speak(speak, TextToSpeech.QUEUE_ADD, null);
         mTask = new TimerTask() {
             @Override
             public void run() {
@@ -84,7 +86,8 @@ public class busStop extends AppCompatActivity implements TextToSpeech.OnInitLis
                 });
 
                 Log.d("5초마다", "ㅋㅋ");
-
+                String speak = Tv.getText().toString();
+                myTTS.speak(speak, TextToSpeech.QUEUE_ADD, null);
                 /*버스가 도착지 전정류장에 도착시*/
                 if(location.equals("1")){
                     mTimer.cancel();
