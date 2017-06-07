@@ -13,7 +13,6 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -274,6 +273,7 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
                 @Override
                 public boolean onLongClick(View v) {
                     myTTS.speak(topTV1.getText().toString()+"정류장을 선택하셨습니다.", TextToSpeech.QUEUE_ADD, null);
+                    myTTS.shutdown();
                     Intent intent = new Intent(getApplicationContext(), CheckRsv.class);
                     intent.putExtra("busNumber", busNumber); //버스 번호
                     intent.putExtra("stationId", stationId); // 정류장ID

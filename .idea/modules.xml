@@ -5,8 +5,11 @@
       <module fileurl="file://$PROJECT_DIR$/BSB.iml" filepath="$PROJECT_DIR$/BSB.iml" />
       <module fileurl="file://$PROJECT_DIR$/BSBhj.iml" filepath="$PROJECT_DIR$/BSBhj.iml" />
       <module fileurl="file://$PROJECT_DIR$/BSBhj_2.iml" filepath="$PROJECT_DIR$/BSBhj_2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BSBhj_2.iml" filepath="$PROJECT_DIR$/BSBhj_2.iml" />
       <module fileurl="file://$PROJECT_DIR$/BSBhjpush.iml" filepath="$PROJECT_DIR$/BSBhjpush.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reco-sdk-android_1.1.4/reco-sdk-android_1.1.4.iml" filepath="$PROJECT_DIR$/reco-sdk-android_1.1.4/reco-sdk-android_1.1.4.iml" />
       <module fileurl="file://$PROJECT_DIR$/reco-sdk-android_1.1.4/reco-sdk-android_1.1.4.iml" filepath="$PROJECT_DIR$/reco-sdk-android_1.1.4/reco-sdk-android_1.1.4.iml" />
     </modules>
   </component>

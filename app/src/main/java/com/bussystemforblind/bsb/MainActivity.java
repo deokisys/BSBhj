@@ -7,8 +7,6 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -61,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     Log.d("error", e.toString());
                 }
                 Log.d("error", "1");
+                myTTS.shutdown();
                 Intent intent = new Intent(MainActivity.this, InputBusNumber.class);
                 intent.putExtra("stationId", stationId);
                 startActivity(intent);
@@ -80,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         cardRgs.setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View v) {
                 myTTS.speak(cardRgs.getText().toString()+"버튼을 선택하셨습니다.",TextToSpeech.QUEUE_ADD,null);
+                myTTS.shutdown();
                 Intent intent2 = new Intent(MainActivity.this,Card.class);
                 startActivity(intent2);
                 return false;
