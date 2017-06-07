@@ -2,7 +2,9 @@ package com.bussystemforblind.bsb;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
+import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,13 +19,18 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class busStop extends AppCompatActivity implements TextToSpeech.OnInitListener{
+public class busStop extends AppCompatActivity implements TextToSpeech.OnInitListener {
     LinearLayout linearLayout;
     String busNumber, stationId, routeId, dtnStation, busId;
     BusAPI busAPI = new BusAPI();
     TextView Tv;
     String location="";
     int stopNum=0; // 목적정류장 까지 남은 정류장 수
+    int dtnNum=0;
+    int locNum=0;
+
+    int k=0;
+
 
     private TimerTask mTask;
     private Timer mTimer;
@@ -68,10 +75,11 @@ public class busStop extends AppCompatActivity implements TextToSpeech.OnInitLis
             e1.printStackTrace();
         }
         for(int i=0; i<list.size(); i++){
-            if(list.get(i).indexOf(dtnStation)>0){
-                dtnStationNum = list.get(i).substring(list.get(i).indexOf(dtnStation)+10); // 목적 정류장 순번만 잘라냄
+            Log.d("목적 정류장 이름", dtnStation);
+            if(list.get(i).indexOf(dtnStation)!=-1){
+                dtnStationNum = list.get(i).substring(list.get(i).indexOf(dtnStation)+dtnStation.length()); // 목적 정류장 순번만 잘라냄
                 Log.d("목적 정류장 이름,순번", list.get(i).toString());
-                Log.d("목적 정류장 순번", dtnStationNum);
+                Log.d("목적 정류장 순번", "dtnStationNum : "+dtnStationNum);
                 break;
             }
         }
@@ -80,69 +88,152 @@ public class busStop extends AppCompatActivity implements TextToSpeech.OnInitLis
         try {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
             /*탑승중인 버스가 위치한 정류장의 순번*/
+            Log.d("busId",busId);
             location = busAPI.getLocation(routeId,busId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         Log.d("dtnStationNum", "dtnStationNum"+dtnStationNum);
-        Log.d("locationNumebr", "locationNumebr"+location);
+        Log.d("locationNumebr", "locationNumeber"+location);
 
-        int dtnNum = Integer.parseInt(dtnStationNum);
-        int locNum = Integer.parseInt(location);
+        dtnNum = Integer.parseInt(dtnStationNum);
+        locNum = Integer.parseInt(location);;
 
         if(dtnNum>locNum){
             stopNum = dtnNum - locNum;
         }else if(dtnNum<locNum){
-            stopNum = locNum = dtnNum;
+            stopNum = locNum - dtnNum;
         }
 
-        Tv.setText("목적지까지 "+stopNum+" 정류장 \\n남았습니다.\\n\\n새로고침 하시려면\\n화면을 터치하세요.");
-        String speak = Tv.getText().toString();
-        myTTS.speak(speak, TextToSpeech.QUEUE_ADD, null);
+        Log.d("stopNum", "stopNum : "+stopNum);
+
+        Tv = (TextView) findViewById(R.id.dtnTv);
+
+        runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+                Tv.setText("목적지까지 "+stopNum+" 정류장 \n남았습니다.\n\n새로고침 하시려면\n화면을 터치하세요.");
+            }
+        });
+
+        Log.d("BusStop 클래스", "현재 탑승중인 버스가 위치한 정류장 순번을 알아냄");
+        try {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
+            /*탑승중인 버스가 위치한 정류장의 순번*/
+            //location = busAPI.getLocation(routeId,busId); //오류 발생
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        Log.d("locationNumebr", "locationNumeber"+location);
+
+
         mTask = new TimerTask() {
             @Override
             public void run() {
+                Log.d("BusStop 클래스", "현재 탑승중인 버스가 위치한 정류장 순번을 알아냄");
                 try {
-                    do{
-                        location = busAPI.getLocation(routeId,busId);
-                    }while(location.equals(""));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
+            /*탑승중인 버스가 위치한 정류장의 순번*/
+                    location = busAPI.getLocation(routeId,busId);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
+                Log.d("locationNumebr", "locationNumeber"+location);
+
+                locNum = Integer.parseInt(location);
+
+                if(dtnNum>locNum){
+                    stopNum = dtnNum - locNum;
+                }else if(dtnNum<locNum){
+                    stopNum = locNum - dtnNum;
+                }
+
+                Log.d("stopNum", "stopNum : "+stopNum);
 
                 runOnUiThread(new Runnable(){
                     @Override
                     public void run() {
-                        Tv.setText("목적지까지 "+stopNum+" 정류장 \\n남았습니다.\\n\\n새로고침 하시려면\\n화면을 터치하세요.");
+                        Tv.setText("목적지까지 "+stopNum+" 정류장 \n남았습니다.\n\n새로고침 하시려면\n화면을 터치하세요.");
                     }
                 });
 
-                Log.d("5초마다", "ㅋㅋ");
-                String speak = Tv.getText().toString();
-                myTTS.speak(speak, TextToSpeech.QUEUE_ADD, null);
                 /*버스가 도착지 전정류장에 도착시*/
-                if(location.equals("1")){
-                    mTimer.cancel();
+                if(stopNum==1){
+                                                   /*하차정보 서버에 전송*/
+                    //[6]-2. [어플] 서버에게 다음 정류장에서 하차한다는 메세지를 전달
 
-                    /*하차정보 서버에 전송*/
-                    //SocketManager manager = SocketManager.getManager();
-                    //manager.sendMsg("10");
-                    //String msg = manager.getMsg();
-                    //Log.d("MSG",msg);
+                    SocketManager manager = SocketManager.getManager();
+                    manager.sendMsg("10");
+                    String msg = manager.getMsg();
+                    Log.d("MSG",msg); // 0 : 전송 실패 1 : 전송 성공
 
-                    Intent intent1 = new Intent(busStop.this, busStop2.class);
-                    intent1.putExtra("busNumber", busNumber);
-                    intent1.putExtra("Destination", dtnStation);
-                    intent1.putExtra("stationId", stationId);
-                    intent1.putExtra("routeId",routeId);
-                    intent1.putExtra("busId", busId);
-                    startActivity(intent1);
+                    if(msg.equals("1")){
+                        mTimer.cancel();
+                        Intent intent1 = new Intent(busStop.this, busStop2.class);
+                        intent1.putExtra("busNumber", busNumber);
+                        intent1.putExtra("dtnStation", dtnStation);
+                        intent1.putExtra("stationId", stationId);
+                        intent1.putExtra("routeId",routeId);
+                        intent1.putExtra("busId", busId);
+                        startActivity(intent1);
+                    }
                 }
             }
         };
         mTimer = new Timer();
-        mTimer.schedule(mTask, 5000, 5000); // 5초
-        Log.d("TimerTask", "실행");
+        if(stopNum>3){
+            mTimer.schedule(mTask, 0, 10000); // 5초
+        }else if(stopNum<=3){
+            mTimer.schedule(mTask, 0, 5000); // 5초
+        }
+
+        //API 접근 오류 났을 때
+//        for(k=0;k <2; k++){
+//            SystemClock.sleep(5000);
+//            Log.d("k", "k = "+Integer.toString(k));
+//                /*
+//                locNum = dtnNum-i;
+//                if(dtnNum>locNum){
+//                    stopNum = dtnNum - locNum;
+//                }else if(dtnNum<locNum){
+//                    stopNum = locNum - dtnNum;
+//                }
+//                */
+//            stopNum--;
+//
+//            Log.d("stopNum", "stopNum : "+stopNum);
+//
+//            runOnUiThread(new Runnable(){
+//                @Override
+//                public void run() {
+//                    Tv.setText("목적지까지 "+stopNum+" 정류장 \n남았습니다.\n\n새로고침 하시려면\n화면을 터치하세요.");
+//                }
+//            });
+//        }
+
+        /*버스가 도착지 전정류장에 도착시*/
+//        if(stopNum==1){
+//                           /*하차정보 서버에 전송*/
+//            //[6]-2. [어플] 서버에게 다음 정류장에서 하차한다는 메세지를 전달
+///*
+//                    SocketManager manager = SocketManager.getManager();
+//                    manager.sendMsg("10");
+//                    String msg = manager.getMsg();
+//                    Log.d("MSG",msg); // 0 : 전송 실패 1 : 전송 성공
+//*/
+//
+//            Log.d("페이지 넘어감","busStop2로");
+//            Intent intent1 = new Intent(busStop.this, busStop2.class);
+//            intent1.putExtra("busNumber", busNumber);
+//            intent1.putExtra("dtnStation", dtnStation);
+//            intent1.putExtra("stationId", stationId);
+//            intent1.putExtra("routeId",routeId);
+//            intent1.putExtra("busId", busId);
+//            startActivity(intent1);
+//        }
+
+
+
 
 
         /*
@@ -157,8 +248,8 @@ public class busStop extends AppCompatActivity implements TextToSpeech.OnInitLis
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(getApplicationContext(), busStop2.class);
-                startActivity(intent1);
+                    String speak = Tv.getText().toString();
+                    myTTS.speak(speak, TextToSpeech.QUEUE_ADD, null);
             }
         });
     }
@@ -166,5 +257,11 @@ public class busStop extends AppCompatActivity implements TextToSpeech.OnInitLis
     @Override
     public void onInit(int status) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myTTS.shutdown();
     }
 }

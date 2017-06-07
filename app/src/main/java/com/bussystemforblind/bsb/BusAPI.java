@@ -13,6 +13,7 @@ import java.util.LinkedList;
 public class BusAPI {
 
     private String serviceKey = "=OqgPPoNQvW0xRXmNtbLAJMBlzpdujJRRlMUy1ikXZS%2FiiNwnshZ50IWHbBPfZbTMCxHsHwQUovBFHLrBY%2BOsog%3D%3D";
+    private String serviceKey2 = "=GjvTI4hf%2FjSECG%2FSrZXdAoI2P0ow2o0VbznIPgWnoG9D1CbG4QiWJ1EEiltrY70%2Fj1NNPaV4LRc9rPHPPnSdpg%3D%3D";
 
     /*정류장 고유 번호로 정류장ID를 알아내서 반환하는 매소드*/
     public String getStationId(String stationNumber) throws IOException{
@@ -212,6 +213,79 @@ public class BusAPI {
         }while(startIndex>sb.length());
 
         return stationName;
+    }
+
+    public String getDTNnumber(String routeId, String stationId) throws IOException {
+
+        StringBuilder urlBuilder = new StringBuilder("http://openapi.gbis.go.kr/ws/rest/busrouteservice/station"); /*URL*/
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + serviceKey); /*Service Key*/
+        urlBuilder.append("&" + URLEncoder.encode("routeId","UTF-8") + "=" + URLEncoder.encode(routeId, "UTF-8")); /*노선 ID*/
+        URL url = new URL(urlBuilder.toString());
+
+        int startIndex= 0;
+        int endIndex = 0;
+        StringBuilder sb;
+        String stationName = "";
+
+        do{
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-type", "application/json");
+            System.out.println("Response code: " + conn.getResponseCode());
+            BufferedReader rd;
+            if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+                rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            } else {
+                rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            }
+            sb = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                sb.append(line);
+            }
+            rd.close();
+            conn.disconnect();
+            System.out.println(sb.toString());
+
+            startIndex= 12;
+            endIndex = 0;
+
+            while(startIndex>11){
+                startIndex = sb.indexOf("<stationId>",startIndex)+11;
+                endIndex = sb.indexOf("</stationId>",endIndex+1);
+                Log.d("starIndex", Integer.toString(startIndex));
+                Log.d("endIndex", Integer.toString(endIndex));
+                Log.d("stationId",sb.substring(startIndex,endIndex)+", "+stationId);
+                if(sb.substring(startIndex,endIndex).equals(stationId)){
+                    break;
+                }
+            }
+
+            int turnIndex = sb.indexOf("<turnYn>Y", startIndex);
+
+            while(startIndex>0&&endIndex>0&& startIndex<turnIndex && endIndex<turnIndex){
+                startIndex = sb.indexOf("<stationId>",startIndex)+11;
+                endIndex  = sb.indexOf("</stationId>",endIndex+1);
+                if(startIndex>0&&endIndex>0&& startIndex<turnIndex && endIndex<turnIndex){
+                    Log.d("starIndex", Integer.toString(startIndex));
+                    Log.d("endIndex", Integer.toString(endIndex));
+                    stationName = sb.substring(startIndex,endIndex);
+                    Log.d("stationName", sb.substring(startIndex,endIndex));
+                }
+
+                startIndex = sb.indexOf("<stationName>",startIndex)+13;
+                endIndex  = sb.indexOf("</stationName>",endIndex+1);
+                if(startIndex>0&&endIndex>0&& startIndex<turnIndex && endIndex<turnIndex){
+                    Log.d("starIndex", Integer.toString(startIndex));
+                    Log.d("endIndex", Integer.toString(endIndex));
+                    stationName = stationName +sb.substring(startIndex,endIndex)+",";
+                    Log.d("stationName", sb.substring(startIndex,endIndex));
+                }
+            }
+
+        }while(startIndex>sb.length());
+
+        return stationName; // 정류장 ID + 정류장 이름
     }
 
     /*해당 정류장에서부터 반환점까지 목적지로 설정할 수 있는 정류장의 "이름 + 순번" 들을 Linkedlist로 저장하여 반환*/
@@ -457,7 +531,7 @@ public class BusAPI {
         String location=null;
 
         StringBuilder urlBuilder = new StringBuilder("http://openapi.gbis.go.kr/ws/rest/buslocationservice"); /*URL*/
-        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + serviceKey); /*Service Key*/
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + serviceKey2); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("routeId","UTF-8") + "=" + URLEncoder.encode(routeId, "UTF-8")); /*노선 ID*/
         URL url = new URL(urlBuilder.toString());
 
@@ -465,8 +539,7 @@ public class BusAPI {
         int endIndex = 0;
         StringBuilder sb;
 
-        do{
-            do{
+        //do{
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Content-type", "application/json");
@@ -485,21 +558,28 @@ public class BusAPI {
                 rd.close();
                 conn.disconnect();
                 Log.d("여기까지는 왔다",sb.toString());
-            }while(sb.indexOf("NORMAL SERVICE.")==-1);
 
-            startIndex = sb.indexOf("<plateNo>",startIndex)+9;
-            endIndex = sb.indexOf("</plateNo>",startIndex);
-
-            System.out.println(sb.substring(startIndex, endIndex));
-
-            if(startIndex>0&&startIndex<endIndex&&sb.substring(startIndex,endIndex).equals(busId)){
-                startIndex = sb.indexOf("<stationSeq>",startIndex)+12;
-                endIndex = sb.indexOf("</stationSeq>",startIndex+1);
-                location = sb.substring(startIndex,endIndex);
-            }else if(!sb.substring(startIndex,endIndex).equals(busId)){
+            if(sb.toString().contains("LIMITED NUMBER OF SERVICE REQUESTS EXCEEDS ERROR.")){
+                Log.d("에러", "LIMITED NUMBER OF SERVICE REQUESTS EXCEEDS ERROR.");
                 location=null;
+            }else{
+                if(sb.toString().contains(busId)){
+                    while(location==null){
+                        startIndex = sb.indexOf("<plateNo>",startIndex)+9;
+                        endIndex = sb.indexOf("</plateNo>",startIndex);
+                        Log.d("busId", sb.substring(startIndex, endIndex));
+                        if(sb.substring(startIndex,endIndex).contains(busId)){
+                            startIndex = sb.indexOf("<stationSeq>",startIndex)+12;
+                            endIndex = sb.indexOf("</stationSeq>",endIndex);
+                            location = sb.substring(startIndex,endIndex);
+                        }
+                    }
+                }else if(!sb.toString().contains(busId)){
+                    location=null;
+                }
             }
-        }while(location==null);
+
+        //}while(location==null);
 
         Log.d("Location", location);
 

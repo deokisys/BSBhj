@@ -50,4 +50,19 @@ public class DB_Controller extends SQLiteOpenHelper {
             textView.append(cursor.getString(0)+"  /  "+cursor.getString(1));
         }
     }
+
+    public String getCardInfo(){
+        Cursor cursor = this.getReadableDatabase().rawQuery("SELECT * FROM CARD", null);
+        String cardInfo="";
+
+        if(cursor==null){
+            cardInfo = "8-F";
+        }
+        else{
+            while(cursor.moveToNext()){
+                cardInfo = "8-T-"+(cursor.getString(0)+"  /  "+cursor.getString(1))+"-";
+            }
+        }
+        return cardInfo;
+    }
 }

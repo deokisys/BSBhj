@@ -55,9 +55,9 @@ public class CheckRsv extends AppCompatActivity implements OnInitListener {
         speak = checkTv.getText().toString();
 
         yes = (Button)findViewById(R.id.YES);
-        yes.setOnClickListener(new View.OnClickListener() {
+        yes.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 myTTS.speak("예약되었습니다.", TextToSpeech.QUEUE_ADD, null);
 
                 Intent intent1 = new Intent(getApplicationContext(), estTime.class);
@@ -66,18 +66,32 @@ public class CheckRsv extends AppCompatActivity implements OnInitListener {
                 intent1.putExtra("stationId", stationId);
                 intent1.putExtra("routeId",routeId);
                 startActivity(intent1);
+                return false;
+            }
+        });
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myTTS.speak("예", TextToSpeech.QUEUE_ADD, null);
             }
         });
         no = (Button)findViewById(R.id.NO);
-        no.setOnClickListener(new View.OnClickListener() {
+        no.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 Toast toast = Toast.makeText(getApplicationContext(), "처음화면으로 돌아갑니다.", Toast.LENGTH_LONG);
                 myTTS.speak("처음화면으로 돌아갑니다.", TextToSpeech.QUEUE_ADD, null);
                 toast.setGravity(Gravity.CENTER,0,0);
                 toast.show();
                 Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent1);
+                return false;
+            }
+        });
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myTTS.speak("아니오", TextToSpeech.QUEUE_ADD, null);
             }
         });
 
@@ -86,5 +100,11 @@ public class CheckRsv extends AppCompatActivity implements OnInitListener {
     @Override
     public void onInit(int status) {
         myTTS.speak(speak, TextToSpeech.QUEUE_ADD, null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myTTS.shutdown();
     }
 }

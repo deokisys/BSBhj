@@ -41,6 +41,7 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
     EditText stopname_input;
     private TextToSpeech myTTS;
     String busStopList = "";
+    String busStopList2 = "";
     Context context = this;
     String busNumber;
     String stationId;
@@ -86,6 +87,7 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
             routeId = busAPI.getRouteId(busNumber);
             busStopList = busAPI.busStop(routeId, stationId);// busStopList : 목적지 정류장들 List(","로 구분되어있는 String 문자열)
+            busStopList2 = busAPI.getDTNnumber(routeId, stationId);// busStopList2 : 목적지 정류장 ID + 정류장 이름 List(","로 구분되어있는 String 문자열)
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -166,10 +168,7 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
         }
     };
 
-    protected void onDestroy() {
-        super.onDestroy();
-        myTTS.shutdown();
-    }
+
 
     @Override
     public void onInit(int status) {
@@ -271,15 +270,24 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
             stationList.add(tmp);
             id++;
 
-            topTV1.setOnClickListener(new View.OnClickListener() {
+            topTV1.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
+                public boolean onLongClick(View v) {
+                    myTTS.speak(topTV1.getText().toString()+"정류장을 선택하셨습니다.", TextToSpeech.QUEUE_ADD, null);
                     Intent intent = new Intent(getApplicationContext(), CheckRsv.class);
                     intent.putExtra("busNumber", busNumber); //버스 번호
                     intent.putExtra("stationId", stationId); // 정류장ID
                     intent.putExtra("Destination", stationList.get(v.getId())); // 목적 정류장 이름
                     intent.putExtra("routeId",routeId); // 버스의 전체 노선ID
                     startActivity(intent);
+                    return false;
+                }
+            });
+
+            topTV1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myTTS.speak(topTV1.getText().toString(), TextToSpeech.QUEUE_ADD, null);
                 }
             });
             topLL.addView(topTV1);
@@ -312,5 +320,11 @@ public class selectDestination extends AppCompatActivity implements OnInitListen
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myTTS.shutdown();
     }
 }

@@ -22,15 +22,40 @@
         android:textColor="#333333"
         android:layout_weight="0.9"
         android:gravity="center_vertical"/>
-    <Button
+
+    <LinearLayout
+        android:layout_weight="0.2"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.1"
-        android:background="#333333"
-        android:text="하차 완료"
-        android:textColor="#fbe600"
-        android:textSize="40dp"
-        android:id="@+id/getOff"/>
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#333333"
+            android:text="하차 실패"
+            android:textColor="#fbe600"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            android:textSize="35dp"
+            android:id="@+id/nogGetOff"
+            android:layout_marginRight="5dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#333333"
+            android:text="하차 완료"
+            android:textColor="#fbe600"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            android:textSize="35dp"
+            android:id="@+id/getOff"
+            android:layout_marginLeft="5dp"/>
+
+    </LinearLayout>
 
 
 </LinearLayout>

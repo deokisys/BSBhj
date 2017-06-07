@@ -94,20 +94,10 @@ public class estTime extends AppCompatActivity implements TextToSpeech.OnInitLis
         estTv.setText(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장에\n\n" + "위치해 있습니다.");
         speak = estTv.getText().toString();
 
-        /*도착예정버스의 교유번호, 정류장ID 서버에 전송*/
-        //SocketManager manager = SocketManager.getManager();
-        //manager.sendMsg("2-"+busId+"-"+stationId);
-        //manager.sendMsg("2-0-"+stationId);
-        //String msg = manager.getMsg();
-        //Log.d("MSG",msg);
-
-        /*비콘 정보 받기*/
-        /*비콘 정보 받기*/
-
         cancleBtn = (Button)findViewById(R.id.cancelRsv);
-        cancleBtn.setOnClickListener(new View.OnClickListener() {
+        cancleBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 mTimer.cancel();
                 Toast toast = Toast.makeText(getApplicationContext(), "예약이 취소되었습니다.", Toast.LENGTH_LONG);
                 myTTS.speak("예약이 취소되었습니다. 처음화면으로 돌아갑니다.", TextToSpeech.QUEUE_ADD, null);
@@ -115,14 +105,21 @@ public class estTime extends AppCompatActivity implements TextToSpeech.OnInitLis
                 toast.show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
+                return false;
+            }
+        });
+        cancleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myTTS.speak("예약 취소", TextToSpeech.QUEUE_ADD, null);
             }
         });
 
         //새로고침 버튼 클릭 시 위의 과정 반복
         reBtn = (Button)findViewById(R.id.reBtn);
-        reBtn.setOnClickListener(new View.OnClickListener() {
+        reBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 try {
                     StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().penaltyLog().build());
                     staOrder=api.getStaOrder(routeId,busNumber);
@@ -132,6 +129,13 @@ public class estTime extends AppCompatActivity implements TextToSpeech.OnInitLis
                 }
                 estTv.setText(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장에\n\n" + "위치해 있습니다.");
                 myTTS.speak(busNumber+" 번 버스\n\n"+busArrival+"번째 전 정류장에\n\n" + "위치해 있습니다.", TextToSpeech.QUEUE_ADD, null);
+                return false;
+            }
+        });
+        reBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myTTS.speak("새로고침", TextToSpeech.QUEUE_ADD, null);
             }
         });
 
@@ -172,21 +176,23 @@ public class estTime extends AppCompatActivity implements TextToSpeech.OnInitLis
                     mTimer.cancel();
 
                     /*도착예정버스의 교유번호, 정류장ID (예약 정보) 서버에 전송*/
-                    //SocketManager manager = SocketManager.getManager();
+                    //[4] - 2. [어플] 서버에게 예약 메세지 전송
+                    SocketManager manager = SocketManager.getManager();
                     //manager.sendMsg("2-"+busId+"-"+stationId);
-                    //manager.sendMsg("2-0-"+stationId);
-                    //String msg = manager.getMsg();
-                    //Log.d("MSG",msg);
+                    manager.sendMsg("2-5000-"+stationId);
+                    String msg = manager.getMsg();
+                    Log.d("MSG",msg); //도착예정인 버스 앞, 뒷문에 부착된 비콘 정보 받기
 
-                    /*도착예정인 버스 앞, 뒷문에 부착된 비콘 정보 받기*/
-
-                    Intent intent1 = new Intent(getApplicationContext(), arriveBus.class);
-                    intent1.putExtra("busNumber", busNumber); // 버스 번호
-                    intent1.putExtra("dtnStation", dtnStation); // 목적 정류장 이름
-                    intent1.putExtra("stationId", stationId); // 정류장 ID
-                    intent1.putExtra("routeId",routeId); // 버스 전체 노선ID
-                    intent1.putExtra("busId", busId); // 도착예정인 버스의 버스번호판 번호 ex) "29가1234"
-                    startActivity(intent1);
+                    if(!msg.equals("0")){
+                  //  if(true){
+                        Intent intent1 = new Intent(getApplicationContext(), arriveBus.class);
+                        intent1.putExtra("busNumber", busNumber); // 버스 번호
+                        intent1.putExtra("dtnStation", dtnStation); // 목적 정류장 이름
+                        intent1.putExtra("stationId", stationId); // 정류장 ID
+                        intent1.putExtra("routeId",routeId); // 버스 전체 노선ID
+                        intent1.putExtra("busId", busId); // 도착예정인 버스의 버스번호판 번호 ex) "29가1234"
+                        startActivity(intent1);
+                    }
                 }
             }
         };

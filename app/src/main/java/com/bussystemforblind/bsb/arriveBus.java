@@ -3,7 +3,9 @@ package com.bussystemforblind.bsb;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.RemoteException;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,16 +32,19 @@ import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 
 
-public class arriveBus extends AppCompatActivity
-        //implements RECOServiceConnectListener,RECORangingListener,RECOMonitoringListener
-{
+public class arriveBus extends AppCompatActivity implements RECOServiceConnectListener,RECORangingListener,RECOMonitoringListener, TextToSpeech.OnInitListener {
     String busNumber;
     String stationId;
     String routeId;
     String dtnStation,busId, dtnNumber;
+    String msg;
+
+    int getOff = 0;
+
+    private TextToSpeech myTTS;
 
 
-    /*비콘*//*
+    /*비콘*/
     private RECOBeaconManager recoManager;
     private ArrayList<RECOBeaconRegion> rangingRegions;
     //
@@ -55,7 +60,7 @@ public class arriveBus extends AppCompatActivity
     private int count_t=0;
     private int count_e=0;
     private static final int REQUEST_LOCATION = 10;
-    private View mLayout;*/
+    private View mLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +81,10 @@ public class arriveBus extends AppCompatActivity
         dtnStation = intent.getStringExtra("dtnStation"); // 목적 정류장 이름
         busId = intent.getStringExtra("busId"); // 버스 번호판 ex) "12가1234"
 
+        myTTS = new TextToSpeech(this, this);
+
         /*비콘으로 버스와 나의 거리를 측정하여 탑승여부 확인*/
-        /*mLayout = findViewById(R.id.activity_arrive_bus);
+        mLayout = findViewById(R.id.activity_arrive_bus);
 
         tv = (TextView) findViewById(R.id.textview);
         tv2 = (TextView) findViewById(R.id.textview2);
@@ -98,43 +105,64 @@ public class arriveBus extends AppCompatActivity
         boolean mEnableBackgroundTimeout=false;
         recoManager = RECOBeaconManager.getInstance(this,mScanRecoOnly,mEnableBackgroundTimeout);//레코메니저 인스턴스 생성
         recoManager.bind(this);//연결시작
-        recoManager.setRangingListener(this);//스캔 리스너*/
+        recoManager.setRangingListener(this);//스캔 리스너
         /*비콘으로 버스와 나의 거리를 측정하여 탑승여부 확인*/
 
 
         /*DB에 접근하여 결제정보 가져옴*/
+        //DB_Controller controller;
+        //controller = new DB_Controller(this, "", null, 1);
+        //String cardInfo = controller.getCardInfo();
+        //Log.d("카드", "정보 : "+cardInfo);
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if(getOff==1){
+                    /*서버에 결제정보 전송*/
+                    // [5]-1. [어플] 앞문 비콘과 거리가 일정 수준 이내라면 서버에게 결제 정보 메시지 전송
 
+                    Log.d("결제정보 전송","전송");
+                    SocketManager manager = SocketManager.getManager();
+                    manager.sendMsg("8-T-0101045445715584-05/21-5671A"); // 카드정보 + 목적 정류장 ID
+                    msg = manager.getMsg();
+                    Log.d("MSG",msg); // 0 : 전송 실패 1 : 전송 성공
 
-        /*서버에 결제정보 전송*/
-        //SocketManager manager = SocketManager.getManager();
-        //manager.sendMsg("2-"+busId+"-"+stationId);
-        //manager.sendMsg("8-T-0101045445715584-05/21-56712");
-        //String msg = manager.getMsg();
-        //Log.d("MSG",msg);
+                    Toast ss = Toast.makeText(getApplicationContext(),"결제정보 전송완료",Toast.LENGTH_SHORT);
+                    ss.show();
+                    myTTS.speak("결제가 완료되었습니다.", TextToSpeech.QUEUE_ADD, null);
+                }
+            }
+        }, 15000);
 
-
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
         /*결제정보 전송 확인후 다음 페이지로 이동*/
-        //if(msg.equals("9-1")){
-        if(true){
-            Intent intent1 = new Intent(arriveBus.this, busStop.class);
-            intent1.putExtra("busNumber", busNumber); // 버스 번호
-            intent1.putExtra("dtnStation", dtnStation); // 목적 정류장 이름
-            intent1.putExtra("stationId", stationId); // 출발 정류장 ID
-            intent1.putExtra("routeId",routeId); // 버스 전체 노선 ID
-            intent1.putExtra("busId", busId); // 탑승할 버스의 버스 번호판 ex)"12가1234"
-            startActivity(intent1);
+                if(msg.equals("1")){
+                    Intent intent1 = new Intent(arriveBus.this, busStop.class);
+                    intent1.putExtra("busNumber", busNumber); // 버스 번호
+                    intent1.putExtra("dtnStation", dtnStation); // 목적 정류장 이름
+                    intent1.putExtra("stationId", stationId); // 출발 정류장 ID
+                    intent1.putExtra("routeId", routeId); // 버스 전체 노선 ID
+                    intent1.putExtra("busId", busId); // 탑승할 버스의 버스 번호판 ex)"12가1234"
+                    startActivity(intent1);
 
-        }else{ // 결제정보 전송 후 결제 승인이 안남
-            Intent intent1 = new Intent(arriveBus.this, arriveBus.class);
-            intent1.putExtra("busNumber", busNumber);
-            intent1.putExtra("dtnStation", dtnStation);
-            intent1.putExtra("stationId", stationId);
-            intent1.putExtra("routeId",routeId);
-            intent1.putExtra("busId", busId);
-            startActivity(intent1);
-        }
+                }else if(msg.equals("0")){ // 결제정보 전송 후 결제 승인이 안남
+                    Intent intent1 = new Intent(arriveBus.this, arriveBus.class);
+                    intent1.putExtra("busNumber", busNumber);
+                    intent1.putExtra("dtnStation", dtnStation);
+                    intent1.putExtra("stationId", stationId);
+                    intent1.putExtra("routeId",routeId);
+                    intent1.putExtra("busId", busId);
+                    startActivity(intent1);
+                }
+            }
+        }, 15000);
     }
-/*
     @Override
     public void onServiceConnect() {
 
@@ -251,11 +279,17 @@ public class arriveBus extends AppCompatActivity
                     double result = c * c - (a * a + b * b);//공식 삼각함수
 
                     if(a<2){//정문 거리가 2 미만
+                        nu.setText("버스 입구에 도착하였습니다.");
+                        myTTS.speak("버스 입구에 도착하였습니다.", TextToSpeech.QUEUE_ADD, null);
                         Toast ss = Toast.makeText(getApplicationContext(),"정문근처 끝",Toast.LENGTH_SHORT);
                         ss.show();
+
+                        // 탑승 완료인지 검사
+                        getOff=1;// 탑승완료
                         for(RECOBeaconRegion region : rangingRegions) {//스캔 종료
                             try {
                                 recoManager.stopRangingBeaconsInRegion(region);
+                                myTTS.shutdown();
                             } catch (RemoteException e) {
                                 //RemoteException 발생 시 작성 코드
                             } catch (NullPointerException e) {
@@ -266,17 +300,23 @@ public class arriveBus extends AppCompatActivity
 
                     if (result < -5) {//앞으로
                         //nu.setText("앞으로");
+                        nu.setText("버스가 앞쪽에 위치해 있습니다.");
+                        myTTS.speak("버스가 정류장 앞쪽에 위치해 있습니다.", TextToSpeech.QUEUE_ADD, null);
                         count_f++;
                     } else if (result > 5) {//뒤로
                         //nu.setText("뒤로");
+                        nu.setText("버스가 정류장 뒤쪽에 위치해 있습니다.");
+                        myTTS.speak("버스가 정류장 뒤쪽에 위치해 있습니다.", TextToSpeech.QUEUE_ADD, null);
                         count_e++;
                     } else {//일치
                         //nu.setText("일치");
                         Toast ss = Toast.makeText(getApplicationContext(),"일치로 끝",Toast.LENGTH_SHORT);
                         ss.show();
+                        getOff=1;// 탑승완료
                         for(RECOBeaconRegion region : rangingRegions) {
                             try {
                                 recoManager.stopRangingBeaconsInRegion(region);
+                                myTTS.shutdown();
                             } catch (RemoteException e) {
                                 //RemoteException 발생 시 작성 코드
                             } catch (NullPointerException e) {
@@ -289,12 +329,17 @@ public class arriveBus extends AppCompatActivity
                         if(count_f-count_e==1){
                             Toast ss = Toast.makeText(getApplicationContext(),"5초 정지",Toast.LENGTH_SHORT);
                             ss.show();
+                            myTTS.shutdown();
                         }
                         else if(count_f>count_e){
-                            nu.setText("앞으로");
+                            //nu.setText("앞으로");
+                            nu.setText("버스가 앞쪽에 위치해 있습니다.");
+                            myTTS.speak("버스가 정류장 앞쪽에 위치해 있습니다.", TextToSpeech.QUEUE_ADD, null);
                         }
                         else if(count_f<count_e){
-                            nu.setText("뒤로");
+                            //nu.setText("뒤로");
+                            nu.setText("버스가 정류장 뒤쪽에 위치해 있습니다.");
+                            myTTS.speak("버스가 정류장 뒤쪽에 위치해 있습니다.", TextToSpeech.QUEUE_ADD, null);
                         }
                         count2=0;
                     }
@@ -370,5 +415,10 @@ public class arriveBus extends AppCompatActivity
                     }
                 })
                 .show();
-    }*/
+    }
+
+    @Override
+    public void onInit(int status) {
+
+    }
 }

@@ -15,7 +15,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class InputBusNumber extends AppCompatActivity implements View.OnClickListener, TextToSpeech.OnInitListener{
+public class InputBusNumber extends AppCompatActivity implements View.OnClickListener, TextToSpeech.OnInitListener, View.OnLongClickListener{
 
     BusAPI api = new BusAPI();
     Button btn_1,btn_2,btn_3,btn_4,btn_5,btn_6,btn_7,btn_8,btn_9,btn_0,btn_reset,btn_ok,btn_hypen;
@@ -70,10 +70,25 @@ public class InputBusNumber extends AppCompatActivity implements View.OnClickLis
         btn_ok.setOnClickListener(this);
         btn_hypen.setOnClickListener(this);
 
+        btn_1.setOnLongClickListener(this);
+        btn_2.setOnLongClickListener(this);
+        btn_3.setOnLongClickListener(this);
+        btn_4.setOnLongClickListener(this);
+        btn_5.setOnLongClickListener(this);
+        btn_6.setOnLongClickListener(this);
+        btn_7.setOnLongClickListener(this);
+        btn_8.setOnLongClickListener(this);
+        btn_9.setOnLongClickListener(this);
+        btn_0.setOnLongClickListener(this);
+        btn_reset.setOnLongClickListener(this);
+        btn_ok.setOnLongClickListener(this);
+        btn_hypen.setOnLongClickListener(this);
+
         busNumber = (TextView)findViewById(R.id.BusNumber);
     }
 
-    public void onClick(View v) {
+    @Override
+    public boolean onLongClick(View v) {
         switch (v.getId()){
             case R.id.btn_1:
                 busNumber.setText(busNumber.getText().toString() + " 1");
@@ -139,10 +154,61 @@ public class InputBusNumber extends AppCompatActivity implements View.OnClickLis
                 }
                 break;
         }
+        return false;
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_1:
+                myTTS.speak("1", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_2:
+                myTTS.speak("2", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_3:
+                myTTS.speak("3", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_4:
+                myTTS.speak("4", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_5:
+                myTTS.speak("5", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_6:
+                myTTS.speak("6", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_7:
+                myTTS.speak("7", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_8:
+                myTTS.speak("8", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_9:
+                myTTS.speak("9", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_0:
+                myTTS.speak("0", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_reset:
+                myTTS.speak("reset", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_hypen:
+                myTTS.speak("hypen", TextToSpeech.QUEUE_ADD, null);
+                break;
+            case R.id.btn_ok:
+                myTTS.speak("OK", TextToSpeech.QUEUE_ADD, null);
+                break;
+        }
     }
 
     @Override
     public void onInit(int status) {
         myTTS.speak("탑승하고자 하는 버스의 번호를 입력해주세요.", TextToSpeech.QUEUE_ADD, null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myTTS.shutdown();
     }
 }

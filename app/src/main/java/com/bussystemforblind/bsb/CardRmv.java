@@ -69,6 +69,7 @@ public class CardRmv extends AppCompatActivity implements OnInitListener{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        myTTS.shutdown();
     }
 
     @Override
